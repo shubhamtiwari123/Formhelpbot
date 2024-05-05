@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRUS AND GRADE BOT🧑‍🌾🌱</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    .bot-message, .user-message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 70%;
+        word-wrap: break-word;
+    }
+    .bot-message {
+        background-color: #009688;
+        color: white;
+        align-self: flex-start;
+    }
+    .user-message {
+        background-color: #F0F0F0;
+        color: black;
+        align-self: flex-end;
+    }
+    .input-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    #user-input {
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 200px;
+        margin-right: 10px;
+    }
+    #submit-btn {
+        padding: 8px 7px;
+        border-radius: 5px;
+        background-color: #009688;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    #submit-btn:hover {
+        background-color: #00796B;
+    }
+    .edit-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    .edit-btn:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>GRUS AND GRADE BOT🧑‍🌾🌱</h1>
+    <h3>Built by <a href="https://www.grusandgrade.com/contact-us/index.html">Our Website</a></h3>
+    <div id="chat-container" class="chat-container">
+        <!-- This is where the conversation will appear -->
+    </div>
+    <div id="input-container" class="input-container">
+        <!-- This is where the user will input their answers -->
+    </div>
+</div>
+
+<script>
+    const chatContainer = document.getElementById('chat-container');
+    const inputContainer = document.getElementById('input-container');
+    let currentQuestion = 1;
+    let sellerName = '';
+    let processType = '';
+    let tradeQuantity = '';
+    let pluckingDate = '';
+    let packagingDate = '';
+    let processCompleteDate = '';
+    let origin = '';
+
+    renderNextQuestion();
+
+    function renderNextQuestion() {
+        switch (currentQuestion) {
+            case 1:
+                renderBotMessage("Welcome! Please enter your name in the 'Seller Name' field.");
+                renderInputField();
+                break;
+            case 2:
+                renderBotMessage("Select the process type: Processed or Unprocessed.");
+                renderInputField("Processed", "Unprocessed");
+                break;
+            case 3:
+                renderBotMessage("Specify the trade quantity in kilograms.");
+                renderInputField();
+                break;
+            case 4:
+                renderBotMessage("Select the plucking date.");
+                renderInputField("date");
+                break;
+            case 5:
+                renderBotMessage("Select the packaging date.");
+                renderInputField("date");
+                break;
+            case 6:
+                renderBotMessage("Select the processing complete date.");
+                renderInputField("date");
+                break;
+            case 7:
+                renderBotMessage("Select the origin of the crop.");
+                renderInputField("Andhra Pradesh", "Arunachal Pradesh", /* add more states */);
+                break;
+            case 8:
+                renderBotMessage("You have completed all the questions. Please review your answers and make any necessary edits.");
+                renderReviewForm();
+                break;
+        }
+    }
+
+    function renderBotMessage(message) {
+        const botMessage = `<div class="bot-message">${message}</div>`;
+        chatContainer.innerHTML += botMessage;
+    }
+
+    function renderInputField(...options) {
+        let inputField;
+        if (options.length > 0) {
+            if (options[0] === 'date') {
+                inputField = '<input type="date" id="user-input">';
+            } else {
+                inputField = '<select id="user-input">';
+                options.forEach(option => {
+                    inputField += `<option value="${option}">${option}</option>`;
+                });
+                inputField += '</select>';
+            }
+        } else {
+            inputField = '<input type="text" id="user-input" placeholder="Your answer..." autofocus>';
+        }
+        inputField += '<button id="submit-btn">Submit</button>';
+        inputContainer.innerHTML = inputField;
+        document.getElementById('submit-btn').addEventListener('click', handleAnswerSubmission);
+    }
+
+    function handleAnswerSubmission() {
+        const userInput = document.getElementById('user-input').value.trim();
+        if (userInput !== '') {
+            switch (currentQuestion) {
+                case 1:
+                    sellerName = userInput;
+                    break;
+                case 2:
+                    processType = userInput;
+                    break;
+                case 3:
+                    tradeQuantity = userInput;
+                    break;
+                case 4:
+                    pluckingDate = userInput;
+                    break;
+                case 5:
+                    packagingDate = userInput;
+                    break;
+                case 6:
+                    processCompleteDate = userInput;
+                    break;
+                case 7:
+                    origin = userInput;
+                    break;
+            }
+            const userAnswerMessage = `<div class="user-message">${userInput}</div>`;
+            chatContainer.innerHTML += userAnswerMessage;
+            currentQuestion++;
+            renderNextQuestion();
+        }
+    }
+
+    function renderReviewForm() {
+        const reviewForm = `
+            <form id="form">
+                <h2>Crop Selling Form</h2>
+                <label for="seller-name">1) Seller Name:</label>
+                <div id="seller-name-container">
+                    <div id="seller-name-value">${sellerName}</div>
+                    <button class="edit-btn" id="edit-seller-name">Edit</button>
+                </div><br>
+                <label for="process-type">2) Process Type:</label>
+                <div id="process-type-container">
+                    <div id="process-type-value">${processType}</div>
+                    <button class="edit-btn" id="edit-process-type">Edit</button>
+                </div><br>
+                <label for="trade-quantity">3) Trade Quantity (Kgs):</label>
+                <div id="trade-quantity-container">
+                    <div id="trade-quantity-value">${tradeQuantity}</div>
+                    <button class="edit-btn" id="edit-trade-quantity">Edit</button>
+                </div><br>
+                <label for="plucking-date">4) Plucking Date:</label>
+                <div id="plucking-date-container">
+                    <div id="plucking-date-value">${pluckingDate}</div>
+                    <button class="edit-btn" id="edit-plucking-date">Edit</button>
+                </div><br>
+                <label for="packaging-date">5) Packaging Date:</label>
+                <div id="packaging-date-container">
+                    <div id="packaging-date-value">${packagingDate}</div>
+                    <button class="edit-btn" id="edit-packaging-date">Edit</button>
+                </div><br>
+                <label for="process-complete-date">6) Processing Complete Date:</label>
+                <div id="process-complete-date-container">
+                    <div id="process-complete-date-value">${processCompleteDate}</div>
+                    <button class="edit-btn" id="edit-process-complete-date">Edit</button>
+                </div><br>
+                <label for="origin">7) Origin:</label>
+                <div id="origin-container">
+                    <div id="origin-value">${origin}</div>
+                    <button class="edit-btn" id="edit-origin">Edit</button>
+                </div><br>
+                <input type="submit" value="Submit">
+            </form>
+        `;
+        chatContainer.innerHTML += reviewForm;
+        inputContainer.innerHTML = '';
+
+        // Add event listeners for edit buttons
+        document.getElementById('edit-seller-name').addEventListener('click', () => handleEdit('seller-name'));
+        document.getElementById('edit-process-type').addEventListener('click', () => handleEdit('process-type'));
+        document.getElementById('edit-trade-quantity').addEventListener('click', () => handleEdit('trade-quantity'));
+        document.getElementById('edit-plucking-date').addEventListener('click', () => handleEdit('plucking-date'));
+        document.getElementById('edit-packaging-date').addEventListener('click', () => handleEdit('packaging-date'));
+        document.getElementById('edit-process-complete-date').addEventListener('click', () => handleEdit('process-complete-date'));
+        document.getElementById('edit-origin').addEventListener('click', () => handleEdit('origin'));
+    }
+
+    function handleEdit(field) {
+        switch (field) {
+            case 'seller-name':
+                currentQuestion = 1;
+                break;
+            case 'process-type':
+                currentQuestion = 2;
+                break;
+            case 'trade-quantity':
+                currentQuestion = 3;
+                break;
+            case 'plucking-date':
+                currentQuestion = 4;
+                break;
+            case 'packaging-date':
+                currentQuestion = 5;
+                break;
+            case 'process-complete-date':
+                currentQuestion = 6;
+                break;
+            case 'origin':
+                currentQuestion = 7;
+                break;
+        }
+        chatContainer.innerHTML = '';
+        renderNextQuestion();
+    }
+</script>
+</body>
+</html>

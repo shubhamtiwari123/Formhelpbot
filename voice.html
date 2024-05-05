@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRUS AND GRADE BOT🧑‍🌾🌱</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    .bot-message, .user-message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 70%;
+        word-wrap: break-word;
+    }
+    .bot-message {
+        background-color: #009688;
+        color: white;
+        align-self: flex-start;
+    }
+    .user-message {
+        background-color: #F0F0F0;
+        color: black;
+        align-self: flex-end;
+    }
+    .input-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    #user-input {
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 200px;
+        margin-right: 10px;
+    }
+    #submit-btn, #voice-btn {
+        padding: 8px 7px;
+        border-radius: 5px;
+        background-color: #009688;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    #submit-btn:hover, #voice-btn:hover {
+        background-color: #00796B;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>GRUS AND GRADE BOT🧑‍🌾🌱</h1>
+    <h3>Built by <a href="https://www.grusandgrade.com/contact-us/index.html">Our Website</a></h3>
+    <div id="chat-container" class="chat-container">
+        <!-- This is where the conversation will appear -->
+    </div>
+    <div id="input-container" class="input-container">
+        <!-- This is where the user will input their answers -->
+        <button id="voice-btn">Voice Input</button>
+        <input type="text" id="user-input" placeholder="Your answer..." autofocus>
+        <button id="submit-btn">Submit</button>
+    </div>
+</div>
+
+<script>
+    const chatContainer = document.getElementById('chat-container');
+    const userInputField = document.getElementById('user-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const voiceBtn = document.getElementById('voice-btn');
+    let recognition;
+
+    submitBtn.addEventListener('click', handleSubmission);
+    voiceBtn.addEventListener('click', startVoiceInput);
+
+    function handleSubmission() {
+        const userInput = userInputField.value.trim();
+        if (userInput !== '') {
+            renderUserMessage(userInput);
+            // Clear input field after submission
+            userInputField.value = '';
+            // Handle the user input (send to backend, etc.)
+            // Replace this with your logic
+        }
+    }
+
+    function startVoiceInput() {
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            recognition.start();
+            recognition.onresult = function(event) {
+                const result = event.results[0][0].transcript;
+                userInputField.value = result;
+            };
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+            recognition.onend = function() {
+                console.log('Speech recognition ended');
+            };
+        } else {
+            alert('Speech recognition is not supported in this browser.');
+        }
+    }
+
+    function renderBotMessage(message) {
+        const botMessage = `<div class="bot-message">${message}</div>`;
+        chatContainer.innerHTML += botMessage;
+    }
+
+    function renderUserMessage(message) {
+        const userMessage = `<div class="user-message">${message}</div>`;
+        chatContainer.innerHTML += userMessage;
+    }
+</script>
+</body>
+</html>
